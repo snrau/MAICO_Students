@@ -1,6 +1,7 @@
 <script>
   import * as mu from "./util/modelutil.js";
   import * as glutil from "./util/glyphutil.js";
+  import * as flutil from "./util/fileutil.js";
   // @ts-ignore
   import {
     pointcolorselect,
@@ -129,6 +130,15 @@
     { label: "NumberOfNotes", value: 7 },
     { label: "PercentinScale", value: 8 },
   ];
+
+
+  const exportoptions = [
+    { label: "seperat Files", value: 0 },
+    { label: "seperat Tracks", value: 1 },
+    { label: "successively", value: 2 },
+  ];
+  let exportmode = { label: "seperat Files", value: 0 }
+
   // maybe for selection
   let modeltemp = [];
 
@@ -136,7 +146,8 @@
 
   let oldmodelselected = null;
 
-  let dataset = false;
+  let dataset = false; 
+  let export = false;
   let devmode = false;
   let clustering = false;
   let visualization = false;
@@ -243,6 +254,28 @@
             {$iter}
           </span>
         </div>
+      {/if}
+    </div>
+
+    <div>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div on:click={() => (export = !export)}>
+        <h2>Export</h2>
+      </div>
+      {#if export}
+        <label for="selectexport">Format</label>
+        <Select
+          class="select"
+          id="selectexport"
+          items={exportoptions}
+          bind:value={exportmode}
+          clearable={false}
+        />
+        <button
+          on:click={() => flutil.writeToMidi()}
+        >
+          open dataset
+        </button>
       {/if}
     </div>
 
